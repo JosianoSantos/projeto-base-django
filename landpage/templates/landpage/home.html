@@ -1,0 +1,459 @@
+{% extends 'landpage/base.html' %}
+{% load static %}
+
+{% block extra_title %}Home{% endblock %}
+
+{% block extra_css %}
+    <link href="{% static 'landpage/vendors/toastr/toastr.min.css' %}" rel="stylesheet"/>
+    <style>
+        .wrimagecard {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            position: relative;
+            background: #fff;
+            {#box-shadow: 12px 15px 20px 0px rgba(46, 61, 73, 0.15);#}
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .wrimagecard .fa {
+            position: relative;
+            font-size: 70px;
+        }
+
+        .wrimagecard-topimage_header {
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        a.wrimagecard:hover, .wrimagecard-topimage:hover {
+            box-shadow: 2px 4px 8px 0px rgba(46, 61, 73, 0.2);
+        }
+
+        .wrimagecard-topimage a {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .wrimagecard-topimage_title {
+            padding: 20px 24px;
+            height: 80px;
+            padding-bottom: 0.75rem;
+            position: relative;
+        }
+
+        .wrimagecard-topimage a {
+            border-bottom: none;
+            text-decoration: none;
+            color: #525c65;
+            transition: color 0.3s ease;
+        }
+    </style>
+{% endblock %}
+
+{% block extra_js %}
+
+    <script src="{% static 'landpage/vendors/toastr/toastr.min.js' %}"></script>
+
+    <script type="application/javascript">
+
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        {% for message in messages %}
+            toastr['{{ message.tags }}']('{{ message }}');
+        {% endfor %}
+    </script>
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <script type="application/javascript">
+
+        function iniciarLoadingButton() {
+            $('.button-contactForm').html('<span class="spinner-border spinner-border-sm"></span> Enviando')
+                .css('pointer-events', 'none');
+        }
+
+        function pararLoadingButton() {
+            $('.button-contactForm').html('Enviar')
+                .css('pointer-events', 'all');
+        }
+
+        function enviarMensagem() {
+
+            if (validarCampos()) {
+
+                iniciarLoadingButton();
+
+                let nome = $("input[name='nome']");
+                let email = $("input[name='email']");
+                let telefone = $("input[name='telefone']");
+                let assunto = $("input[name='assunto']");
+                let mensagem = $("textarea[name='mensagem']");
+
+                $.ajax({
+                    url: "{% url 'landpage:ajax_contato' %}",
+                    method: 'POST',
+                    data: {
+                        nome: nome.val(),
+                        email: email.val(),
+                        assunto: assunto.val(),
+                        telefone: telefone.val(),
+                        mensagem: mensagem.val(),
+                        g_recaptcha_response: grecaptcha.getResponse()
+                    },
+                }).done(function (result) {
+                    if (result['error_messages'].nome !== undefined) {
+                        $("#nomeHelp").text(result['error_messages'].nome);
+                    }
+                    if (result['error_messages'].email !== undefined) {
+                        $("#emailHelp").text(result['error_messages'].email);
+                    }
+                    if (result['error_messages'].recaptcha !== undefined) {
+                        $("#recaptchaHelp").text(result['error_messages'].recaptcha);
+                    }
+                    if (result['error_messages'].mensagem !== undefined) {
+                        $("#mensagemHelp").text(result['error_messages'].message);
+                    }
+                    if (result['error_messages'].assunto !== undefined) {
+                        $("#assuntoHelp").text(result['error_messages'].assunto);
+                    }
+                    if (result['error_messages'].telefone !== undefined) {
+                        $("#telefoneHelp").text(result['error_messages'].telefone);
+                    }
+                    if (result.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '',
+                            text: 'Mensagem enviada com sucesso',
+                        });
+                        nome.val(null);
+                        email.val(null);
+                        telefone.val(null);
+                        mensagem.val(null);
+                        assunto.val(null);
+                        pararLoadingButton();
+                    }
+                }).fail(function () {
+                    toastr.error('Não foi possível enviar a mensagem. Tente novamente');
+                    pararLoadingButton();
+                })
+
+            }
+        }
+
+        function validarCampos() {
+
+            let nome = $("input[name='nome']").val();
+            let email = $("input[name='email']").val();
+            let telefone = $("input[name='telefone']").val();
+            let assunto = $("input[name='assunto']").val();
+            let mensagem = $("textarea[name='mensagem']").val();
+            let mensagemCampoObrigatorio = 'Este campo é obrigatório.';
+
+            if ((nome !== '') && (email !== '') && (mensagem !== '') && (telefone !== '') && (assunto !== '')) {
+                $("#nomeHelp").text('');
+                $("#assuntoHelp").text('');
+                $("#telefoneHelp").text('');
+                $("#emailHelp").text('');
+                $("#mensagemHelp").text('');
+                return true
+            }
+
+            if (nome === '') {
+                $("#nomeHelp").text(mensagemCampoObrigatorio);
+            } else {
+                $("#nomeHelp").text('');
+            }
+            if (email === '') {
+                $("#emailHelp").text(mensagemCampoObrigatorio);
+            } else {
+                $("#emailHelp").text('');
+            }
+            if (mensagem === '') {
+                $("#mensagemHelp").text(mensagemCampoObrigatorio);
+            } else {
+                $("#mensagemHelp").text('');
+            }
+            if (telefone === '') {
+                $("#telefoneHelp").text(mensagemCampoObrigatorio);
+            } else {
+                $("#telefoneHelp").text('');
+            }
+            if (assunto === '') {
+                $("#assuntoHelp").text(mensagemCampoObrigatorio);
+            } else {
+                $("#assuntoHelp").text('');
+            }
+
+            if (grecaptcha.getResponse() === "") {
+                $("#captchaHelp").text('Este campo é obrigatório.');
+
+            } else {
+                $("#captchaHelp").text('');
+            }
+            return false
+        }
+
+    </script>
+
+{% endblock %}
+
+{% block content %}
+
+    <section class="banner_part">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-xl-6">
+                    <div class="banner_text" style="height: 650px">
+                        <div class="banner_text_iner">
+                            <div class="row">
+                                <div class="col-sm-6">
+
+                                    <div class="wrimagecard wrimagecard-topimage">
+                                        <a href="{% url 'landpage:equipe' %}">
+                                            <div class="wrimagecard-topimage_header"
+                                                 style="background-color:#fbccd3">
+                                                <center><i class="fa fa-users" style="color:#432e24"></i></center>
+                                                <h4 class="text-center">Equipe
+                                                </h4>
+                                            </div>
+
+                                        </a>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="wrimagecard wrimagecard-topimage">
+                                        <a href="{% url 'landpage:noticia_list' %}">
+                                            <div class="wrimagecard-topimage_header"
+                                                 style="background-color:#fbccd3">
+                                                <center><i class="fa fa-info-circle" style="color:#432e24"></i></center>
+                                                <h4 class="text-center">Informativos
+                                                </h4>
+                                            </div>
+
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="wrimagecard wrimagecard-topimage">
+                                        <a href="{% url 'landpage:home' %}#links">
+                                            <div class="wrimagecard-topimage_header"
+                                                 style="background-color:#fbccd3">
+                                                <center><i class="fa fa-link" style="color:#432e24"></i></center>
+                                                <h4 class="text-center">Links úteis
+                                                </h4>
+                                            </div>
+
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="wrimagecard wrimagecard-topimage">
+                                        <a href="{% url 'landpage:home' %}#contato">
+                                            <div class="wrimagecard-topimage_header"
+                                                 style="background-color:#fbccd3">
+                                                <center><i class="fa fa-comment-o" style="color:#432e24"></i></center>
+                                                <h4 class="text-center">Fale com a gente
+                                                </h4>
+                                            </div>
+
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {#                            <h5>O seu portal de Educação Parental</h5>#}
+                            {#                            <h1 class="text-uppercase">Tornando o seu mundo e o mundo do seu filho melhor</h1>#}
+                            {#                            <p>O papel central da família na educação saudável de crianças e jovens!</p>#}
+                            {#                            <a href="#" class="btn_1">Fale com a gente </a>#}
+                            {#                            <a href="#" class="btn_2">Acesse o blog</a>#}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <hr>
+    <section class="contact-section section_padding pt-2">
+        <div class="container">
+
+            <div class="row justify-content-center">
+                <div class="col-xl-5">
+                    <div class="section_tittle text-center">
+                        <h2>Últimos informativos</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row align-items-sm-center align-items-lg-stretch">
+
+                {% for noticia in ultimas_noticias %}
+
+                    <div class="col-sm-3">
+                        <div class="learning_img">
+                            {% if noticia.banner %}
+                                <img style="" src="{{ noticia.banner.url }}" alt="">
+                            {% else %}
+                                <i class="fa fa-info-circle text-muted" style="font-size:240px;"></i>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="learning_member_text">
+                            <h5>{{ noticia.titulo }}</h5>
+                            <p>{{ noticia.texto|safe|truncatechars:400 }}</p>
+
+                            <a href="{{ noticia.get_detail_url }}" class="btn_1">Saiba Mais</a>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 mb-3">
+                        <hr>
+                    </div>
+
+                {% endfor %}
+                <div class="col-sm-12 text-center">
+                    <a href="{% url 'landpage:noticia_list' %}" class="btn_1">Ver todos <i
+                            class="fa fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <hr>
+    <section class="contact-section section_padding pt-0 mb-0" id="contato">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-5 mb-0">
+                    <div class="section_tittle text-center">
+                        <h2 class="contact-title">Fale com a gente<br><small>Envie sua pergunta ou sugestão de
+                            pauta.</small></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <form class="form-contact contact_form" method="post" id="contactForm" novalidate="novalidate">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input class="form-control" name="nome" id="nome" type="text"
+                                           onfocus="this.placeholder = ''" onblur="this.placeholder = 'Insira seu nome'"
+                                           placeholder='Insira seu nome' maxlength="70">
+                                    <small id="nomeHelp" class="form-text text-danger"></small>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input class="form-control" name="email" id="email" type="email"
+                                           onfocus="this.placeholder = ''"
+                                           onblur="this.placeholder = 'Insira seu E-Mail'"
+                                           placeholder='Insira seu E-Mail'>
+                                    <small id="emailHelp" class="form-text text-danger"></small>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input class="form-control" name="telefone" id="telefone" type="text"
+                                           onfocus="this.placeholder = ''"
+                                           onblur="this.placeholder = 'Insira o telefone'"
+                                           placeholder='Insira o telefone'
+                                           maxlength="13">
+                                    <small id="telefoneHelp" class="form-text text-danger"></small>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input class="form-control" name="assunto" id="assunto" type="text"
+                                           onfocus="this.placeholder = ''"
+                                           onblur="this.placeholder = 'Insira o assunto'"
+                                           placeholder='Insira o assunto'
+                                           maxlength="100">
+                                    <small id="assuntoHelp" class="form-text text-danger"></small>
+
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+
+                                    <textarea class="form-control w-100" name="mensagem" id="mensagem" cols="30"
+                                              rows="9"
+                                              onfocus="this.placeholder = ''"
+                                              onblur="this.placeholder = 'Digite a mensagem'"
+                                              placeholder='Digite a mensagem'></textarea>
+                                    <small id="mensagemHelp" class="form-text text-danger"></small>
+
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <div class="g-recaptcha"
+                                     data-sitekey="6LcGs9oZAAAAAK2uS-lrF1vX6DW2z70UaIdK-3X3"></div>
+                                <small id="captchaHelp" class="form-text text-danger"></small>
+
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <button type="button" onclick="enviarMensagem()"
+                                        class="button button-contactForm btn_1">Enviar
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    {% if links_uteis %}
+        <hr>
+        <section class="contact-section section_padding pt-0 mb-0" id="links">
+
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-5">
+                        <div class="section_tittle text-center">
+                            <h2 class="contact-title">Links úteis</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-sm-center align-items-lg-stretch">
+
+                    {% for link in links_uteis %}
+
+                        <div class="col-sm-12">
+                            <h6>{{ link.descricao }}</h6>
+                            <a href="{{ link.link }}" target="_blank">{{ link.link }}</a>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+            </div>
+
+        </section>
+    {% endif %}
+
+{% endblock %}

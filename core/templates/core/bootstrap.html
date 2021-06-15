@@ -1,0 +1,157 @@
+{% extends 'bootstrap4/bootstrap4.html' %}
+{% load static %}
+
+{% block bootstrap4_extra_head %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    {#    Bibliotecas dentro do bloco porque não são utilizadas em todos os lugares. #}
+    {#    Onde NÃO precisa usar, chamar esse bloco  sem acrescentar nada dentro #}
+    {% block bibliotecas_css %}
+        <link href="{% static 'core/vendors/bootstrap-select/dist/css/bootstrap-select.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'core/vendors/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css' %}"
+              rel="stylesheet"/>
+        <link rel="stylesheet" type="text/css"
+              href="{% static 'core/vendors/dataTables/DataTables-1.10.18/css/dataTables.bootstrap4.min.css' %}"/>
+        <link href="{% static 'core/vendors/select2/dist/css/select2.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'core/vendors/select2/dist/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+    {% endblock %}
+
+    <link href="{% static 'core/vendors/line-awesome/css/line-awesome.min.css' %}" rel="stylesheet"/>
+
+    <link href="{% static 'core/vendors/toastr/toastr.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'core/css/style.css' %}" rel="stylesheet"/>
+    <link href="{% static 'core/css/bottom_menu.css' %}" rel="stylesheet"/>
+
+    <link rel="manifest" href="{% static 'core/img/site.webmanifest' %}">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'core/img/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'core/img/android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="384x384" href="{% static 'core/img/android-chrome-384x384.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'core/img/android-chrome-512x512.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'core/img/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'core/img/favicon-16x16.png' %}">
+
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <meta name="description" content="Vila Pieneza residencial para idosos">
+
+    <style>
+        .ad2hs-prompt {
+            background-color: rgb(59, 134, 196); /* Blue */
+            border: none;
+            display: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+
+            position: absolute;
+            margin: 0 1rem 1rem;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: calc(100% - 32px);
+        }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+
+{% endblock %}
+
+{% block bootstrap4_title %}{% block page_title %}{% endblock %} - Vila Pieneza{% endblock %}
+
+{% block bootstrap4_before_content %}
+    {#    <button type="button" class="ad2hs-prompt">Instalar</button>#}
+{% endblock %}
+
+{% block bootstrap4_extra_script %}
+
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    {#    Bibliotecas dentro do bloco porque não são utilizadas em todos os lugares. #}
+    {#    Onde NÃO precisa usar, chamar esse bloco  sem acrescentar nada dentro #}
+    {% block bibliotecas_js %}
+        <script src="{% static 'core/vendors/bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script>
+        <script src="{% static 'core/vendors/jquery-maskmoney/dist/jquery.maskMoney.min.js' %}"></script>
+        <script src="{% static 'core/vendors/jquery.maskedinput/dist/jquery.maskedinput.min.js' %}"></script>
+        <script src="{% static 'core/vendors/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+        <script src="{% static 'core/vendors/dataTables/datatables.min.js' %}"></script>
+        <script src="{% static 'core/vendors/bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js' %}"></script>
+
+        <script src="{% static 'core/js/mascaras-genericas.js' %}"></script>
+        <script src="{% static 'core/js/moeda_number.js' %}"></script>
+        <script src="{% static 'core/js/datepicker.js' %}"></script>
+        <script src="{% static 'core/vendors/select2/dist/js/select2.full.min.js' %}"></script>
+        <script src="{% static 'core/js/select2.js' %}"></script>
+        <script src="{% static 'core/js/datatables.js' %}"></script>
+    {% endblock %}
+
+    <script src="{% static 'core/vendors/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'core/js/bottom_menu.js' %}"></script>
+
+    <script type="application/javascript">
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        {% for message in messages %}
+            toastr['{{ message.tags }}']('{{ message }}');
+        {% endfor %}
+
+    </script>
+
+    <!-- FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
+
+    <script src="{% static 'core/js/firebase.js' %}"></script>
+
+    {#    REGISTRO SERVICE WORKER #}
+    <script>
+
+        // Variável global para ser usada na hora de salvar o token do dispositivo
+        usuario_slug = '{{ request.user.slug }}';
+
+        urlSalvarTokenDispositivoUsuario = {% url 'usuario:salvar_token_dispositivo_usuario' %};
+
+        if ("serviceWorker" in navigator && 'PushManager' in window) {
+            // Register the service worker
+            navigator.serviceWorker
+                .register("{% url 'pwa:service_worker' %}")
+                .then(function (reg) {
+                    {#solicitarPermissaoNotificacoes(reg);#}
+
+                    console.log("Service worker registrado com sucesso, escopo: " + reg.scope);
+                });
+        }
+
+    </script>
+
+    {% block extra_js %}{% endblock %}
+
+{% endblock %}

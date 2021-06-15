@@ -1,0 +1,64 @@
+{% extends 'core_administrador/base.html' %}
+
+{% block page_title %}Usuários{% endblock %}
+
+{% block content %}
+
+    <div class="card">
+
+        <div class="card-body">
+            <nav class="navbar navbar-light justify-content-between">
+                <div>
+                    <a class="navbar-brand"><i class="fa fa-user"></i> Usuários do sistema</a>
+                    <a class="btn btn-primary btn-sm" href="{% url 'configuracao:usuario_create' %}"><i
+                        class="fa fa-plus"></i> Adicionar</a>
+                </div>
+                <form class="form-inline">
+                    <input class="form-control form-control-sm mr-sm-2" type="search" name="busca" placeholder="Buscar"
+                           aria-label="Buscar"
+                           value="{{ request.GET.busca }}">
+                    <button class="btn btn-primary btn-sm my-2 my-sm-0" type="submit"><i class="fa fa-search"></i>
+                        Buscar
+                    </button>
+                </form>
+            </nav>
+            <br>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>E-mail</th>
+                        <th>Último login</th>
+                        <th>Tipo</th>
+                        <th class="text-center">Situação</th>
+                        <th class="text-center">Alterar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for usuario in object_list %}
+                        <tr>
+                            <td>{{ usuario.nome }}</td>
+                            <td>{{ usuario.email }}</td>
+                            <td>{{ usuario.last_login|date:"d/m/Y h:i" }}</td>
+                            <td>{{ usuario.get_tipo_display }}</td>
+                            <td class="text-center">
+                                {% if usuario.is_active %}
+                                    <i class="fa fa-circle text-success"></i>
+                                {% else %}
+                                    <i class="fa fa-circle text-danger"></i>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ usuario.get_absolute_url }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

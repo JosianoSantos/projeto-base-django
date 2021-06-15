@@ -1,0 +1,29 @@
+{% load static %}
+
+<script src="{% static 'landpage/js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'landpage/js/popper.min.js' %}"></script>
+<script src="{% static 'landpage/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'landpage/js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'landpage/js/jquery.nice-select.min.js' %}"></script>
+<script src="{% static 'landpage/js/jquery.magnific-popup.js' %}"></script>
+<script src="{% static 'landpage/js/slick.min.js' %}"></script>
+<script src="{% static 'landpage/js/custom.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+
+<script type="application/javascript">
+
+    function smoothScrollingTo(target) {
+        $('html,body').animate({scrollTop: $(target).offset().top}, 1000);
+    }
+
+    $('a[href*=\\#]').not('.desabilita-scroll').on('click', function (event) {
+        smoothScrollingTo(this.hash);
+    });
+    $(document).ready(function () {
+        if (location.hash) {
+            smoothScrollingTo(location.hash);
+        }
+    });
+
+</script>

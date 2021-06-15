@@ -1,0 +1,38 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+
+    <title>{% block page_title %}{% block extra_title %}{% endblock %} - {% endblock %}</title>
+
+    {% include 'landpage/includes/_head_meta.html' %}
+
+    {% block extra_css %}
+
+    {% endblock %}
+
+</head>
+
+<body>
+
+<div class="wrapper home1">
+
+    {% block navbar %}
+        {% include 'landpage/includes/_header.html' %}
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% include 'landpage/includes/_footer.html' %}
+
+</div>
+
+{% include 'landpage/includes/_js.html' %}
+
+{% block extra_js %}
+
+{% endblock %}
+
+</body>

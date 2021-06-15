@@ -1,0 +1,45 @@
+{% extends 'core/bootstrap.html' %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block bibliotecas_css %}{% endblock %}
+{% block bibliotecas_js %}{% endblock %}
+
+{% block page_title %}Login{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'core/css/login.css' %}">
+{% endblock %}
+
+{% block bootstrap4_content %}
+    <div class="container h-100">
+        {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+        <div class="d-flex justify-content-center h-100">
+            <div class="user_card">
+                <div class="d-flex justify-content-center">
+                    <div class="brand_logo_container">
+                        <br>
+                        <img src="{% static 'core/img/logo.png' %}" height="120px" width="240px" class="brand_logo"
+                             alt="Logo">
+                        <br><br>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center form_container mt-10">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% bootstrap_field form.username show_label=False form_group_class='input-group mb-3' addon_before='<i class="fa fa-user"></i>' class='input_user' %}
+                        {% bootstrap_field form.password show_label=False form_group_class='input-group mb-2' addon_before='<i class="fa fa-key"></i>' class='input_user' %}
+                        <div class="d-flex justify-content-center mt-3 login_container">
+                            <button type="submit" name="button" class="btn btn-danger login_btn">Login</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="mt-4">
+                    <div class="d-flex justify-content-center links">
+                        <a class="login_esqueceu_senha" href="{% url 'core:password_reset' %}">Esqueceu da sua senha?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

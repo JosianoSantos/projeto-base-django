@@ -1,0 +1,38 @@
+{% load static %}
+
+<footer class="footer-area pt-0">
+    <div class="container">
+        <div class="row justify-content-between mb-4">
+            <div class="col-sm-4 text-center mt-3">
+                <img style="width: 40%" src="{% static 'landpage/img/logo-projeto.png' %}">
+            </div>
+            <div class="col-sm-4 mt-3">
+                <img style="width: 100%" src="{% static 'landpage/img/logo-mestrado.png' %}">
+            </div>
+            <div class="col-sm-4 text-center mt-4">
+                <div class="single-footer-widget footer_2">
+                    <img style="width: 50%" src="{% static 'landpage/img/logo-UFN.png' %}">
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="copyright_part_text text-center">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <p class="footer-text m-0">
+                                Desenvolvido por
+                                <a href="https://ersistemas.com.br" target="_blank">ER Sistemas</a> |
+                                <a href="{% url 'admin:index' %}"><i class="ti ti-lock">Administração</i></a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
